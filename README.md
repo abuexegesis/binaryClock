@@ -98,4 +98,12 @@ git config user.email abu.exegesis@gmail.com
   ```
 * some other common task are to be found here as well as all over the internet:
   [common git tasks](https://git-scm.com/cheat-sheet))
-* use gitk, or git-cola to see a graphical representation of the structure of your repo 
+* use gitk, or git-cola to see a graphical representation of the structure of your repo
+
+## Notes about Platform.io
+* you need to create a new platform.io project to get everything set up correctly
+
+## Notes about wokwi diagrams
+* you can draw the diagram.json using [wokwi diagram editor](https://wokwi.com/projects/463280990119898113). It is just json, so if you understand where the compents are placed and what they are you could just use a text editor.
+* you need another file in the root of the project called wokwi.toml. This tells where the firmware.elf and firmware.hex files are located in your source code. It is typically in .pio/build/nonatmega328
+
