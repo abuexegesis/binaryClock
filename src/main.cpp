@@ -60,8 +60,8 @@ void setup() {
 
   // CONSOLE debug setup and test
   Serial.begin(9600);
-  Serial.println("");
-  Serial.println("BEGIN TEST");
+  //Serial.println("");
+  //Serial.println("BEGIN TEST");
   /*Serial.println(My_Int);
   Serial.println(My_TimeStamp);
   Serial.println(My_CharArray);
@@ -129,7 +129,8 @@ void testLEDsection (int section){
 int pollSwitches() {
 // I need a better way, as this was used 2x  
   // static const int analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
-  //int switchValue;
+  int switchValue;
+  switchValue = 0;
   
   /*for (int button = 0; button < NO_OF_SWITCHES; button++){
     switchValue = analogRead(analog_switch[button]);  
@@ -138,7 +139,7 @@ int pollSwitches() {
         delay(SECOND);
       }  
     }*/
-  Serial.println("SW1A value is: ");
+  /* Serial.println("SW1A value is: ");
   Serial.println(analogRead(A0));
   Serial.println("SW2A value is: ");
   Serial.println(analogRead(A1));
@@ -146,30 +147,48 @@ int pollSwitches() {
   Serial.println(analogRead(A2));
   Serial.println("SW4A value is: ");
   Serial.println(analogRead(A3));
-  delay(2*SECOND);
-  return 0;
+  delay(2*SECOND); */
+
+  delay(SECOND);
+  
+  if (analogRead(A0) < SWITCH_LOW) switchValue = 1;
+  // Serial.println(analogRead(A0));
+  if (analogRead(A1) < SWITCH_LOW) switchValue = 2;
+  // Serial.println(analogRead(A1));
+  if (analogRead(A2) < SWITCH_LOW) switchValue = 3;
+  // Serial.println(analogRead(A2));
+  if (analogRead(A3) < SWITCH_LOW) switchValue = 4;
+  // Serial.println(analogRead(A3));
+  // Serial.println("switchValue is: ");
+  // Serial.println(switchValue);
+
+  return switchValue;
 }
 
 void loop() {
 
   int action;
+  action=0;
   action = pollSwitches();
   
- /* switch (action) {
-    case 0:
-      testLEDs ();
-      break;
+  switch (action) {
     case 1:
       testLEDsection(CATHODE_SS);
-      break;
+      break;  
     case 2:
       testLEDsection(CATHODE_MM);
       break;
     case 3:
       testLEDsection(CATHODE_HH);
       break;
-  }*/
+    case 4:
+      testLEDs ();
+      break;
+  }
   
-  // Serial.println(analogRead(action));
+  /*Serial.println("========");
+  Serial.println(action);
+  Serial.println("");
+  delay(2*SECOND); */
   
 }
