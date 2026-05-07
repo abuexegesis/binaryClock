@@ -40,6 +40,12 @@ some googling to get some ballpark figures.
 #define HH_LEDS 3
 #define LED_TEST_LOOPS 3
 
+// Testing for output to console for DEBUG messages
+int My_Int = 10;
+unsigned long My_TimeStamp = 1416803716;
+const char *My_CharArray = {"This is My_CharArray"};
+float My_Float = 3.14159266759;
+
 void setup() {
   // put your setup code here, to run once:
   // pinMode(5, OUTPUT); // Set pin D5 as an output
@@ -51,6 +57,13 @@ void setup() {
   for (int pin = 0; pin < NO_OF_SWITCHES; pin++) {
     pinMode(analog_switch[pin], INPUT_PULLUP);
   }
+
+  // CONSOLE debug setup and test
+  Serial.begin(9600);
+  Serial.println(My_Int);
+  Serial.println(My_TimeStamp);
+  Serial.println(My_CharArray);
+  Serial.print(My_Float, 5);  // prints to five places right of the decimal
 }  
 
 void resetCathodes () {
