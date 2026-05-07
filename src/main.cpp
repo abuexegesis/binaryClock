@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #define SECOND 1000
+#define HALF_SECOND 500
 
 #define ANODE_UNITS_1 2
 #define ANODE_UNITS_2 3
@@ -23,11 +24,17 @@ some googling to get some ballpark figures.
 #define cathodeNextScan 1000
 #define cathodeScanWait 1000
 
+#define SW1A A0
+#define SW2A A1
+#define SW3A A2
+#define SW4A A3
+
 // This next secion is ONLY for testing purposes
-#define LEDtest 0
-#define SSLEDs 1
-#define MMLEDs 2
-#define SSLEDs 3
+#define LED_TEST 0
+#define SS_LEDS 1
+#define MM_LEDS 2
+#define HH_LEDS 3
+#define LED_TEST_LOOPS 3
 
 void setup() {
   // put your setup code here, to run once:
@@ -35,6 +42,10 @@ void setup() {
   for(int dPin = 0; dPin < 14; dPin++) {
     pinMode(dPin, OUTPUT);
   }
+
+  /*for (int aPin = 0; aPin < 4; aPin++) {
+    pinMode(aPin, INPUT_PULLUP);
+  } */
 }
 
 void resetCathodes () {
@@ -66,7 +77,7 @@ void testLEDs () {
 
     for (int anode = 2; anode < 9; anode++) {
       selectAnode(anode);
-       delay(SECOND); // Wait for one second
+       delay(SECOND);
     }
   }
 }
@@ -86,9 +97,12 @@ void LEDs_off (int cathode) {
 }
 
 void testLEDsection (int section){
-  LEDs_on(section);
-  delay(SECOND);
-  LEDs_off(section);
+  for (int iterations = 0; iterations < LED_TEST_LOOPS; iterations++) {
+    LEDs_on(section);
+    delay(SECOND);
+    LEDs_off(section);
+    delay(HALF_SECOND);
+  }
 }
 
 void loop() {
