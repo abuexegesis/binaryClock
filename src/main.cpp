@@ -2,6 +2,8 @@
 
 #define SECOND 1000
 #define HALF_SECOND 500
+#define SWITCH_DEBOUNCE 50
+#define SWITCH_LOW 200
 
 #define ANODE_UNITS_1 2
 #define ANODE_UNITS_2 3
@@ -28,6 +30,8 @@ some googling to get some ballpark figures.
 #define SW2A A1
 #define SW3A A2
 #define SW4A A3
+#define NO_OF_SWITCHES 4
+// does not seem to work > #define SWITCH(A0, A1, A2, A3)
 
 // This next secion is ONLY for testing purposes
 #define LED_TEST 0
@@ -43,10 +47,11 @@ void setup() {
     pinMode(dPin, OUTPUT);
   }
 
-  /*for (int aPin = 0; aPin < 4; aPin++) {
-    pinMode(aPin, INPUT_PULLUP);
-  } */
-}
+  static const uint8_t analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
+  for (int pin = 0; pin < NO_OF_SWITCHES; pin++) {
+    pinMode(analog_switch[pin], INPUT_PULLUP);
+  }
+}  
 
 void resetCathodes () {
   for(int cathode = 9; cathode < 12; cathode++){
@@ -105,9 +110,40 @@ void testLEDsection (int section){
   }
 }
 
+int pollSwitches() {
+// I need a better way, as this was used 2x  
+  static const uint8_t analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
+  int selection;
+  selection = 0; // default LED chaser function
+  for (int button = 0; button < NO_OF_SWITCHES; button++){
+    if (analogRead(analog_switch[button]) < SWITCH_LOW){
+      selection = button;
+      break;
+    }
+  } 
+  return selection;
+}
+
 void loop() {
-  testLEDs ();
-  testLEDsection(CATHODE_SS);
-  testLEDsection(CATHODE_MM);
-  testLEDsection(CATHODE_HH);
+  int action;
+  action = pollSwitches();
+  
+  switch (action) {
+    case 0:
+      testLEDs ();
+      break;
+    case 1:
+      testLEDsection(CATHODE_SS);
+      break;
+    case 2:
+      testLEDsection(CATHODE_MM);
+      break;
+    case 3:
+      testLEDsection(CATHODE_HH);
+      break;
+  }
+  
+  
+  
+  
 }
