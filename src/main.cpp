@@ -60,11 +60,14 @@ void setup() {
 
   // CONSOLE debug setup and test
   Serial.begin(9600);
-  Serial.println(My_Int);
+  Serial.println("");
+  Serial.println("BEGIN TEST");
+  /*Serial.println(My_Int);
   Serial.println(My_TimeStamp);
   Serial.println(My_CharArray);
   Serial.print(My_Float, 5);  // prints to five places right of the decimal
-}  
+  */
+  }  
 
 void resetCathodes () {
   for(int cathode = 9; cathode < 12; cathode++){
@@ -125,23 +128,34 @@ void testLEDsection (int section){
 
 int pollSwitches() {
 // I need a better way, as this was used 2x  
-  static const uint8_t analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
-  int selection;
-  selection = 0; // default LED chaser function
-  for (int button = 0; button < NO_OF_SWITCHES; button++){
-    if (analogRead(analog_switch[button]) < SWITCH_LOW){
-      selection = button;
-      break;
-    }
-  } 
-  return selection;
+  // static const int analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
+  //int switchValue;
+  
+  /*for (int button = 0; button < NO_OF_SWITCHES; button++){
+    switchValue = analogRead(analog_switch[button]);  
+      if (switchValue < SWITCH_LOW) {
+        Serial.println("This switch is on: " + button);
+        delay(SECOND);
+      }  
+    }*/
+  Serial.println("SW1A value is: ");
+  Serial.println(analogRead(A0));
+  Serial.println("SW2A value is: ");
+  Serial.println(analogRead(A1));
+  Serial.println("SW3A value is: ");
+  Serial.println(analogRead(A2));
+  Serial.println("SW4A value is: ");
+  Serial.println(analogRead(A3));
+  delay(2*SECOND);
+  return 0;
 }
 
 void loop() {
+
   int action;
   action = pollSwitches();
   
-  switch (action) {
+ /* switch (action) {
     case 0:
       testLEDs ();
       break;
@@ -154,9 +168,8 @@ void loop() {
     case 3:
       testLEDsection(CATHODE_HH);
       break;
-  }
+  }*/
   
-  
-  
+  // Serial.println(analogRead(action));
   
 }
