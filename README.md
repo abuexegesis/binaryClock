@@ -107,3 +107,60 @@ git config user.email abu.exegesis@gmail.com
 * you can draw the diagram.json using [wokwi diagram editor](https://wokwi.com/projects/463280990119898113). It is just json, so if you understand where the compents are placed and what they are you could just use a text editor.
 * you need another file in the root of the project called wokwi.toml. This tells where the firmware.elf and firmware.hex files are located in your source code. It is typically in .pio/build/nonatmega328
 
+## Software ideas
+* direct port manipulation see [port manipulation](https://www.compilenrun.com/docs/iot/arduino/arduino-advanced-programming/arduino-direct-port-manipulation/)
+
+These are the ports
+* Port B (digital pins 8-13)
+* Port C (analog input pins)
+* Port D (digital pins 0-7)
+
+Each port has three associated registers:
+
+* DDRx (Data Direction Register): Configures pins as inputs or outputs
+* PORTx (Port Register): Sets the output state of pins (HIGH or LOW)
+* PINx (Pin Register): Reads the current state of input pins
+
+Pin mapping
+  Arduino Pin   Port   Port Pin
+  ------------- ------ ----------
+  0             D      PD0
+  1             D      PD1
+  2             D      PD2
+  3             D      PD3
+  4             D      PD4
+  5             D      PD5
+  6             D      PD6
+  7             D      PD7
+  8             B      PB0
+  9             B      PB1
+  10            B      PB2
+  11            B      PB3
+  12            B      PB4
+  13            B      PB5
+  A0            C      PC0
+  A1            C      PC1
+  A2            C      PC2
+  A3            C      PC3
+  A4            C      PC4
+  A5            C      PC5
+
+* Note in this mapping, that the HH does not have a 32
+* Also, recall that HH MM SS cathodes are strobed. Only one is on at 
+time. So, you need to always write the two Bytes each time you display
+any of the "digits". For testing, start with just displaying the seconds.
+
+  Here is the mapping for PORTS and LEDS in this project:
+
+    Mapping   Function             Digital Pin   Port   Select bit is
+  --------- ---------- --------- ------------- ------ ---------------
+            Anode      Cathode                        
+  HH                   \*        D11              B   0
+  MM                   \*        D10              B   0
+  SS                   \*        D9               B   0
+  Ones 1    \*                   D8               B   1
+  Ones 2    \*                   D7               D   1
+  Ones 4    \*                   D6               D   1
+  Ones 8    \*                   D5               D   1
+  Tens 16   \*                   D4               D   1
+  Tens 32   \*                   D3               D   1

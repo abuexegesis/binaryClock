@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <softRTC.h>
 
 #define SECOND 1000
 #define SWITCH_DEBOUNCE 50
@@ -32,9 +33,27 @@ some googling to get some ballpark figures.
 #define NO_OF_SWITCHES 4
 // does not seem to work > #define SWITCH(A0, A1, A2, A3)
 
+// declare myRTC for this project
+softRTC myRTC;
+// RTC variables
+uint8_t d, m, h, min, s, weekday;
+uint16_t y;
+bool pm, is12;
+
+void updateTimeDisplay(){
+  myRTC.read(d, m, y, h, min, s, pm, is12, weekday);
+
+  Serial.println("The time is now:");
+  Serial.println(h);
+  Serial.println(min);
+  Serial.println(s);
+  Serial.println("");
+}
+
 void setup() {
-  // put your setup code here, to run once:
-  // pinMode(5, OUTPUT); // Set pin D5 as an output
+  // CONSOLE debug setup and test
+  Serial.begin(9600);
+
   for(int dPin = 0; dPin < 14; dPin++) {
     pinMode(dPin, OUTPUT);
   }
@@ -45,7 +64,25 @@ void setup() {
     pinMode(analog_switch[pin], INPUT_PULLUP);
   }
 
-}  
+  // write(day, month, year, hour, minute, second, isPM, is12HMode)
+  // Example: set 10:15:30 AM, 21 March 2025 in 24-hour mode
+  // Use today 12:54:45 AM, 8 April 2026 in 24-hour mode
+  myRTC.write(8, 5, 2026, 12, 54, 45, false, MODE_24H);
+
+  /* Initialze the clock display based on above reading
+     is there a flash memory that could be used on the Arduino nano once
+     the clock has already been run? */
+
+  updateTimeDisplay();
+
+}
+
+/* Placeholder for thought about changing the display
+ void changeTime(int hourDelta, int minuteDelta, int secondDelta) {
+  readRTC();
+  myRTC.write(day, month, year, hour+hourDelta, minute+minuteDelta,
+  second+secondDelta, false, MODE_24H)
+}*/
 
 void resetCathodes () {
   for(int cathode = 9; cathode < 12; cathode++){
@@ -107,5 +144,8 @@ void loop() {
       testLEDs ();
       break;
   } */
+
+  delay(SECOND);
+  updateTimeDisplay();
   
 }
