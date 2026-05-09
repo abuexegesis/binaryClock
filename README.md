@@ -164,3 +164,26 @@ any of the "digits". For testing, start with just displaying the seconds.
   Ones 8    \*                   D5               D   1
   Tens 16   \*                   D4               D   1
   Tens 32   \*                   D3               D   1
+
+## Math
+
+Tens  Ones  Digit (integer) Comment
+000   0000  00
+001   0001  01
+010   0010  22              For HH, the tens (only 2 bits)        
+011   0011  33
+100   0100  44
+101   0101  55
+000   0110  06
+000   0111  07
+000   1000  08
+000   1001  09
+
+## TODOs
+* make SS display correctly and update
+* ways to better use the loop without using "delay"? Maybe the timing will be more accurate then?
+* make MM and HH display correctly
+* sweep HH MM SS to make them all display correctly and update
+* look into a buttons library for debounce, press, long_press
+* make all buttons function
+* refactor to make use of writing multiple digits at a time

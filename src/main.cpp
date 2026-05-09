@@ -1,7 +1,11 @@
 #include <Arduino.h>
+#include <string.h>
 #include <softRTC.h>
 
+// macro idea from https://stackoverflow.com/questions/29983943/converting-int-to-binary-in-c-arduino
+#define BIT(n,i) (n>>i&1)
 #define SECOND 1000
+#define HALF_SECOND 500
 #define SWITCH_DEBOUNCE 50
 #define SWITCH_LOW 200
 
@@ -39,6 +43,21 @@ softRTC myRTC;
 uint8_t d, m, h, min, s, weekday;
 uint16_t y;
 bool pm, is12;
+char printBuffer[25]; // used with sprintf and Serial.println() to ouptut messages to Console
+
+byte intTOByte(int n){
+  int tens;
+  int ones;
+  byte b;
+  // should never be the case, but ...
+  if (n > 59){
+    n = 0;
+  }
+  tens = n/10;
+  ones = n - 10*tens;
+  b = 10*tens + ones;
+  return b;
+}
 
 void updateTimeDisplay(){
   myRTC.read(d, m, y, h, min, s, pm, is12, weekday);
@@ -48,6 +67,31 @@ void updateTimeDisplay(){
   Serial.println(min);
   Serial.println(s);
   Serial.println("");
+  Serial.println("Int to hex value of seconds is: ");
+  Serial.println(intTOByte(s));
+}
+
+void updateTimeSegment(int segment, int timeValue){
+/*  segment HH=0 (D11); MM=1 (D10); SS=3 (D9)
+    Port B (digital pins 8-13)
+    Port D (digital pins 0-7)
+           |--CATHODES-|------ANODES----------|
+           |           |---TENS----|---ONES---|                     
+    D13 D12 D11 D10 D9  D8 | D7 D6 D5 D4 D3 D2 D1 D0
+      x   x SSC MMC HHC 64 | 32 16  8  4  2  1  x  x   - x= not connected
+      1   1   1   1   0  0    1  1  1  1  1  1  0  0   - mask for HH cathode, only 2 bits for tens
+      1   1   1   0   1  1    1  1  1  1  1  1  0  0   - mask for MM cathode, 3 bits for tens
+      1   1   0   1   1  1    1  1  1  1  1  1  0  0   - mask for SS cathode, 3 bits for tens
+
+
+ANODES_MASK_GENERAL B11111100
+CATHODES_MASK_HOURS B11111100
+CATHODES_MASK_GENERAL B11111110
+*/
+}     
+
+void updateTime(){
+  myRTC.read(d, m, y, h, min, s, pm, is12, weekday);
 }
 
 void setup() {
@@ -73,7 +117,7 @@ void setup() {
      is there a flash memory that could be used on the Arduino nano once
      the clock has already been run? */
 
-  updateTimeDisplay();
+  // updateTimeDisplay();
 
 }
 
@@ -125,9 +169,10 @@ static const int analog_switch[] = {SW1A, SW2A, SW3A, SW4A}; */
 
 void loop() {
 
-  int action;
+/*  int action;
   action=0;
   action = pollSwitches();
+*/
   
 /* Do something based on which pushbutton is pressed
   switch (action) {
@@ -139,13 +184,19 @@ void loop() {
       break;
     case 3:
       testLEDsection(CATHODE_HH);
-      break;
+       break;
     case 4:
       testLEDs ();
       break;
   } */
+  for (int timeValue = 0; timeValue < 60; timeValue++) {
+    sprintf(printBuffer, "%d in binary is %d%d%d %d%d%d%d", timeValue, BIT(timeValue, 6), BIT(timeValue, 5), BIT(timeValue, 4), BIT(timeValue, 3),BIT(timeValue, 2), BIT(timeValue, 1), BIT(timeValue, 0));
+    Serial.println(printBuffer);
 
+    Serial.println("");
+    delay(HALF_SECOND);
+  }
+  // updateTimeDisplay();  
   delay(SECOND);
-  updateTimeDisplay();
-  
+
 }
