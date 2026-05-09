@@ -1,5 +1,9 @@
 # binaryClock
 
+## BROKEN
+* something weird about the libraries right now. I have libdeps/nanoatmega328/Utilities, which is where my Utilities.cpp lives and there is a Utilites.h as well ... Hmmm. But in lib/Utilities/ there is a Utilites.c. Not what I want.
+* there is something up about the highest bit in SS, it is always ON (maybe also for MM, and HH? Also, there is something not right about PORTD and PORTB, they seem to be mixed up)
+
 ## copyright
 
 The hardware and schematic are copyright of Prof Martin Störzer of Hochschule Ravensbur-Weingarten University of Applied Sicences
