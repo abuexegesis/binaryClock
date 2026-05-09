@@ -44,7 +44,8 @@ softRTC myRTC;
 uint8_t d, m, h, min, s, weekday;
 uint16_t y;
 bool pm, is12;
-char printBuffer[25]; // used with sprintf and Serial.println() to ouptut messages to Console
+char binaryOut[16];
+// = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // used with sprintf and Serial.println() to ouptut messages to Console
 
 byte intTOByte(int n){
   int tens;
@@ -198,7 +199,10 @@ void loop() {
     delay(HALF_SECOND);
   }
   // updateTimeDisplay();*/
-  //Serial.println(buildDisplayOut(B11110000, 2));
+  word testOut = buildDisplayOut(B11110000, 2);
+  Serial.println(testOut);
+  Serial.println(testOut, BIN);
+
   Serial.println(testlib());
   Serial.println("Testing out building again");
   delay(SECOND);
