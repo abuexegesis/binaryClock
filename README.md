@@ -179,16 +179,33 @@ Tens  Ones  Digit (integer) Comment
 000   1000  08
 000   1001  09
 
-## TODOs
-* make SS display correctly and update
+## Roadmap
+* make SS display
+* clean up code
 * ways to better use the loop without using "delay"? Maybe the timing will be more accurate then?
 * make MM and HH display correctly
 * sweep HH MM SS to make them all display correctly and update
 * look into a buttons library for debounce, press, long_press
 * make all buttons function
-* refactor to make use of writing multiple digits at a timel
+* refactor to make use of writing multiple digits at a time
 
 ## Create a library
 * [library tutoria](https://roboticsbackend.com/arduino-create-library/)
 * get some of the clutter out of main.cpp, or make some functions that I could use which
 would clutter up main.cpp
+
+## Some useful types and structures
+* Bytes for writing to PORTD (the cathodes) [HH, MM, SS]
+
+d, m, y, h, min, s, pm, is12, weekday / I should try to be more consistent with naming
+## A roadmap of library functions
+* void printDebug (string message)
+* intArray(day, month, year, HH, MM, SS, pm, [is12], weekday) getSystemTime() - to give a reasonable starting time based on the system
+* intArray[HH, MM, SS] getTime()
+* setTime(int HH, int MM, int SS)
+* BYTE timePositionToBcd(int timeValue)
+* intArray[buttonNumber, buttonStatus, increase]pollButtons()
+  * buttonNumber = {1,2,3,4}
+  * buttonStatus = {0 = off, 1 = bump up by one, 2 = bump up by two }
+  * increase = { 0 = decresea, 1 = increase}
+* byte buildTimeElement(int timeElement) timeElement = the integer for either {HH, MM, SS}
