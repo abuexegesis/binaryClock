@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <string.h>
 #include <softRTC.h>
+#include <Utilities.h>
 
 // macro idea from https://stackoverflow.com/questions/29983943/converting-int-to-binary-in-c-arduino
 #define BIT(n,i) (n>>i&1)
@@ -189,14 +190,17 @@ void loop() {
       testLEDs ();
       break;
   } */
-  for (int timeValue = 0; timeValue < 60; timeValue++) {
+/*  for (int timeValue = 0; timeValue < 60; timeValue++) {
     sprintf(printBuffer, "%d in binary is %d%d%d %d%d%d%d", timeValue, BIT(timeValue, 6), BIT(timeValue, 5), BIT(timeValue, 4), BIT(timeValue, 3),BIT(timeValue, 2), BIT(timeValue, 1), BIT(timeValue, 0));
     Serial.println(printBuffer);
 
     Serial.println("");
     delay(HALF_SECOND);
   }
-  // updateTimeDisplay();  
+  // updateTimeDisplay();*/
+  //Serial.println(buildDisplayOut(B11110000, 2));
+  Serial.println(testlib());
+  Serial.println("Testing out building again");
   delay(SECOND);
 
 }
