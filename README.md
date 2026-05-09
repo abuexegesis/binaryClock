@@ -199,7 +199,7 @@ would clutter up main.cpp
 
 d, m, y, h, min, s, pm, is12, weekday / I should try to be more consistent with naming
 ## A roadmap of library functions
-* void printDebug (string message)
+* void printDebug (string message) - maybe not ... just use the Serial.println().
 * intArray(day, month, year, HH, MM, SS, pm, [is12], weekday) getSystemTime() - to give a reasonable starting time based on the system
 * intArray[HH, MM, SS] getTime()
 * setTime(int HH, int MM, int SS)

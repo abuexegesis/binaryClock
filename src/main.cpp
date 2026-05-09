@@ -7,6 +7,7 @@
 #define BIT(n,i) (n>>i&1)
 #define SECOND 1000
 #define HALF_SECOND 500
+#define QUARTER_SECOND 250
 #define SWITCH_DEBOUNCE 50
 #define SWITCH_LOW 200
 
@@ -219,13 +220,19 @@ void loop() {
   } */
 
 
-  Serial.println("This is what byte needs to be written to PORTB, the cathodes for the seconds digit");
+  /*Serial.println("This is what byte needs to be written to PORTB, the cathodes for the seconds digit");
   Serial.println(CATHODES_SECONDS, BIN);
   Serial.println("This is for the number 59");
   Serial.println(4*twoDigitsToBCD(59), BIN); // bit shift 2X for ANODES values
 
   
-  Serial.println("Testing out building again");
-  delay(SECOND);
+  Serial.println("Testing out building again");*/
+  updateTime();
+  //d, m, y, h, min, s, pm, is12, weekday
+
+  PORTB = CATHODES_HOURS;
+  PORTD = 4*twoDigitsToBCD(s);
+  
+  delay(QUARTER_SECOND);
 
 }
