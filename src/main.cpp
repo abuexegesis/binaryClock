@@ -38,6 +38,10 @@ some googling to get some ballpark figures.
 #define NO_OF_SWITCHES 4
 // does not seem to work > #define SWITCH(A0, A1, A2, A3)
 
+#define CATHODES_HOURS B00111101
+#define CATHODES_MINUTES B00111011
+#define CATHODES_SECONDS B00110111
+
 // declare myRTC for this project
 softRTC myRTC;
 // RTC variables
@@ -81,7 +85,7 @@ void updateTimeSegment(int segment, int timeValue){
            |           |---TENS----|---ONES---|                     
     D13 D12 D11 D10 D9  D8 | D7 D6 D5 D4 D3 D2 D1 D0
       x   x SSC MMC HHC 64 | 32 16  8  4  2  1  x  x   - x= not connected
-      1   1   1   1   0  0    1  1  1  1  1  1  0  0   - mask for HH cathode, only 2 bits for tens
+      1   1   1   1   0  1    0  1  1  1  1  1  0  0   - mask for HH cathode, only 2 bits for tens
       1   1   1   0   1  1    1  1  1  1  1  1  0  0   - mask for MM cathode, 3 bits for tens
       1   1   0   1   1  1    1  1  1  1  1  1  0  0   - mask for SS cathode, 3 bits for tens
 
@@ -89,6 +93,10 @@ void updateTimeSegment(int segment, int timeValue){
 ANODES_MASK_GENERAL B11111100
 CATHODES_MASK_HOURS B11111100
 CATHODES_MASK_GENERAL B11111110
+
+HH 00111101
+MM 00111011
+SS 00110111
 */
 }     
 
@@ -199,11 +207,24 @@ void loop() {
     delay(HALF_SECOND);
   }
   // updateTimeDisplay();*/
-  word testOut = buildDisplayOut(B11110000, 2);
+  
+  /* word testOut = buildDisplayOut(B11110000, 2);
   Serial.println(testOut);
   Serial.println(testOut, BIN);
 
-  Serial.println(testlib());
+  Serial.println(testlib()); */
+
+  /*for (int i=0; i < 20; i++){
+    Serial.println(twoDigitsToBCD(i), BIN);
+  } */
+
+
+  Serial.println("This is what byte needs to be written to PORTB, the cathodes for the seconds digit");
+  Serial.println(CATHODES_SECONDS, BIN);
+  Serial.println("This is for the number 59");
+  Serial.println(4*twoDigitsToBCD(59), BIN); // bit shift 2X for ANODES values
+
+  
   Serial.println("Testing out building again");
   delay(SECOND);
 
