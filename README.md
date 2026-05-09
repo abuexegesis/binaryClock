@@ -186,4 +186,9 @@ Tens  Ones  Digit (integer) Comment
 * sweep HH MM SS to make them all display correctly and update
 * look into a buttons library for debounce, press, long_press
 * make all buttons function
-* refactor to make use of writing multiple digits at a time
+* refactor to make use of writing multiple digits at a timel
+
+## Create a library
+* [library tutoria](https://roboticsbackend.com/arduino-create-library/)
+* get some of the clutter out of main.cpp, or make some functions that I could use which
+would clutter up main.cpp
