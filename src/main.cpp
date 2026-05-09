@@ -7,6 +7,7 @@
 #define BIT(n,i) (n>>i&1)
 #define SECOND 1000
 #define HALF_SECOND 500
+#define DIGIT_SWEEP 10
 #define QUARTER_SECOND 250
 #define SWITCH_DEBOUNCE 50
 #define SWITCH_LOW 200
@@ -232,7 +233,14 @@ void loop() {
 
   PORTB = CATHODES_HOURS;
   PORTD = 4*twoDigitsToBCD(s);
+  delay(DIGIT_SWEEP);
+  PORTB = CATHODES_MINUTES;
+  PORTD = 4*twoDigitsToBCD(m);
+  delay(DIGIT_SWEEP);
+  PORTB = CATHODES_SECONDS;
+  PORTD = 4*twoDigitsToBCD(h);
+  delay(DIGIT_SWEEP);
   
-  delay(QUARTER_SECOND);
+  //delay(QUARTER_SECOND);
 
 }
