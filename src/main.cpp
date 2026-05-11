@@ -40,9 +40,9 @@ some googling to get some ballpark figures.
 #define NO_OF_SWITCHES 4
 // does not seem to work > #define SWITCH(A0, A1, A2, A3)
 
-#define CATHODES_HOURS B00111101
-#define CATHODES_MINUTES B00111011
-#define CATHODES_SECONDS B00110111
+#define CATHODES_HOURS B00111100
+#define CATHODES_MINUTES B00111010
+#define CATHODES_SECONDS B00110110
 
 // declare myRTC for this project
 softRTC myRTC;
@@ -232,26 +232,26 @@ void loop() {
   
   Serial.println("Testing out building again");*/
   updateTime();
-  //d, m, y, h, min, s, pm, is12, weekday
+//d, m, y, h, min, s, pm, is12, weekday
 
-  PORTB = CATHODES_HOURS;
+// Refactor this as a loop
+  
   anodesData = adjustAnodesByte (twoDigitsToBCD(s));
   anodesCarry = anodesData.carry;
+  PORTB = CATHODES_HOURS || anodesCarry;
   PORTD = anodesData.shifted;
-  //PORTD = 4*twoDigitsToBCD(s);
   delay(DIGIT_SWEEP);
   
   anodesData = adjustAnodesByte (twoDigitsToBCD(m));
   anodesCarry = anodesData.carry;
-  PORTB = CATHODES_MINUTES;
+  PORTB = CATHODES_MINUTES  || anodesCarry;
   PORTD = anodesData.shifted;
-  //PORTD = 4*twoDigitsToBCD(m);
   delay(DIGIT_SWEEP);
   
   anodesData = adjustAnodesByte (twoDigitsToBCD(h));
   anodesCarry = anodesData.carry;
-  PORTB = CATHODES_SECONDS;
-  //PORTD = 4*twoDigitsToBCD(h);
+  PORTB = CATHODES_SECONDS ;
+  PORTD = anodesData.shifted || anodesCarry;
   delay(DIGIT_SWEEP);
   
   //delay(QUARTER_SECOND);
