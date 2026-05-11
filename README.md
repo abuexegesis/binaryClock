@@ -170,6 +170,7 @@ any of the "digits". For testing, start with just displaying the seconds.
   Tens 32   \*                   D3               D   1
 
 A little more on port mapping
+
 /*  segment HH=0 (D11); MM=1 (D10); SS=3 (D9)
     Port B (digital pins 8-13)
     Port D (digital pins 0-7)
@@ -208,11 +209,14 @@ Tens  Ones  Digit (integer) Comment
 ## Roadmap
 * make SS display
 * clean up code
-* ways to better use the loop without using "delay"? Maybe the timing will be more accurate then?
+* ways to better use the loop without using "delay"? Maybe the timing will be more accurate then? [Better Timing loops - multiple non blocking using millis()](https://pcbsync.com/arduino-timers/)
 * make MM and HH display correctly
 * sweep HH MM SS to make them all display correctly and update
 * look into a buttons library for debounce, press, long_press
 * make all buttons function
+[one tutorial](https://www.circuits-diy.com/button-long-short-press-arduino-tutorial/)
+[JC button library](https://github.com/JChristensen/JC_Button/tree/master)
+[best? tutorial](https://arduinogetstarted.com/tutorials/arduino-button-long-press-short-press)
 * refactor to make use of writing multiple digits at a time
 
 ## Create a library
