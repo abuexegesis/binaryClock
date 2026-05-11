@@ -12,7 +12,11 @@ byte digitToBCD(int number);
 
 byte twoDigitsToBCD(int twodigits);
 
-/*word buildDisplayOut(byte displayMask, int displaySegment);
-String testlib();*/
+struct shiftAndCarry{
+    byte shifted;
+    byte carry;
+};
+
+shiftAndCarry adjustAnodesByte(byte anodes);
 
 #endif

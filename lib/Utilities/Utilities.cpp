@@ -60,4 +60,18 @@ byte twoDigitsToBCD(int twodigits){
 
     bcdEncodedNumber = 16*tens + ones;
     return bcdEncodedNumber;
+
+}
+
+shiftAndCarry adjustAnodesByte(byte anodes){
+    shiftAndCarry result;
+    result.shifted = (byte)(anodes << 2);
+    result.carry = B10000000 && anodes;
+    if (result.carry == B10000000) {
+        result.carry = B00000001;
+    }
+    else {
+        result.carry = B00000000; 
+    }
+    return result;
 }

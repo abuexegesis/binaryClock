@@ -53,6 +53,9 @@ bool pm, is12;
 char binaryOut[16];
 // = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // used with sprintf and Serial.println() to ouptut messages to Console
 
+shiftAndCarry anodesData;
+byte anodesCarry;
+
 byte intTOByte(int n){
   int tens;
   int ones;
@@ -232,13 +235,23 @@ void loop() {
   //d, m, y, h, min, s, pm, is12, weekday
 
   PORTB = CATHODES_HOURS;
-  PORTD = 4*twoDigitsToBCD(s);
+  anodesData = adjustAnodesByte (twoDigitsToBCD(s));
+  anodesCarry = anodesData.carry;
+  PORTD = anodesData.shifted;
+  //PORTD = 4*twoDigitsToBCD(s);
   delay(DIGIT_SWEEP);
+  
+  anodesData = adjustAnodesByte (twoDigitsToBCD(m));
+  anodesCarry = anodesData.carry;
   PORTB = CATHODES_MINUTES;
-  PORTD = 4*twoDigitsToBCD(m);
+  PORTD = anodesData.shifted;
+  //PORTD = 4*twoDigitsToBCD(m);
   delay(DIGIT_SWEEP);
+  
+  anodesData = adjustAnodesByte (twoDigitsToBCD(h));
+  anodesCarry = anodesData.carry;
   PORTB = CATHODES_SECONDS;
-  PORTD = 4*twoDigitsToBCD(h);
+  //PORTD = 4*twoDigitsToBCD(h);
   delay(DIGIT_SWEEP);
   
   //delay(QUARTER_SECOND);
