@@ -8,6 +8,8 @@
 
 String testlib();
 
+void syncToBuildTime();
+
 byte digitToBCD(int number);
 
 byte twoDigitsToBCD(int twodigits);

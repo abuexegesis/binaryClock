@@ -213,3 +213,16 @@ d, m, y, h, min, s, pm, is12, weekday / I should try to be more consistent with 
   * buttonStatus = {0 = off, 1 = bump up by one, 2 = bump up by two }
   * increase = { 0 = decresea, 1 = increase}
 * byte buildTimeElement(int timeElement) timeElement = the integer for either {HH, MM, SS}
+
+## Refactor to simplify
+
+main.cpp
+  define block
+  global variables
+  setup()
+    setupHardware() - the pinmodes for digital outs / analog ins
+    initializeClock() - set up RTC, and initialize the time based on build timestamp
+  loop()
+    getButtons()
+    updateRTC()
+    updateClock()

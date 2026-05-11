@@ -4,7 +4,7 @@ word buildDisplayOut(byte displayMask, int displaySegment) {
     displayOut = CATHODES_MASK_GENERAL*256 + ANODES_MASK_GENERAL;
     
     return displayOut;
-}  
+} 
 
 String testlib(){
     String message = "Test out the library";
@@ -75,3 +75,82 @@ shiftAndCarry adjustAnodesByte(byte anodes){
     }
     return result;
 }
+
+String timestamp = __TIMESTAMP__;
+  // write(day, month, year, hour, minute, second, isPM, is12HMode)
+  // Example: set 10:15:30 AM, 21 March 2025 in 24-hour mode
+  // Use today 12:54:45 AM, 8 April 2026 in 24-hour mode
+
+
+  /* TIMESTAMP yeilds: Mon May 11 16:57:55 2026
+     tens digit        000000000011111111112222
+     ones digit        012345678901234567890123
+  */
+
+ // int timeIDX[14] {0, 3, 4, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 23};
+
+ /*  convertTimestamp (String[24]) {}   => return a structure / define the structure
+  weekday = atoi(timestamp.substring(0,3));
+  day = dayNameToInt (weekday);
+  dayNameToInt(String dayName) {
+    int day
+    switch (dayName) {
+    case "Mon":
+      day = 1;
+      break;
+    case "Tue":
+      day = 2;
+      break;
+    case "Wed":
+      day = 3;
+      break;
+    case "Thu":
+      day = 4;
+      break;
+    case "Fri":
+      day = 5;
+      break;
+    case "Sat":
+      day = 6;
+      break;
+    case "Sun":
+      day = 7;
+    }
+    return day;
+  }
+  String mmm = timestamp.substring(4,3);
+  m = monthStringToInt (mmm);
+  d = atoi(timestamp.substring(8,2));
+  h = atoi(timestamp.substring(11,2));
+  if (h > 12) {
+    h = h - 12;
+  }
+  min = atoi(timestamp.substring(14,2));
+  s = atoi(timestamp.substring(17,2));
+  y = atoi(timestamp.substring(17,2));
+*/
+
+/* Misc working utilities from Main.cpp, will need Utilities.h definitions if used here
+void resetCathodes () {
+  for(int cathode = 9; cathode < 12; cathode++){
+    digitalWrite(cathode, HIGH);
+  }
+}
+
+void resetAnodes () {
+  for (int anode = 2; anode < 9; anode++){
+    digitalWrite(anode, LOW);
+  }
+}
+
+void selectCathode (int cathode) {
+  resetCathodes();
+  digitalWrite(cathode, LOW);
+}
+
+void selectAnode (int anode) {
+  resetAnodes();
+  digitalWrite(anode, HIGH);
+}
+
+*/
