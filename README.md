@@ -169,6 +169,28 @@ any of the "digits". For testing, start with just displaying the seconds.
   Tens 16   \*                   D4               D   1
   Tens 32   \*                   D3               D   1
 
+A little more on port mapping
+/*  segment HH=0 (D11); MM=1 (D10); SS=3 (D9)
+    Port B (digital pins 8-13)
+    Port D (digital pins 0-7)
+           |--CATHODES-|------ANODES----------|
+           |           |---TENS----|---ONES---|                     
+    D13 D12 D11 D10 D9  D8 | D7 D6 D5 D4 D3 D2 D1 D0
+      x   x SSC MMC HHC 64 | 32 16  8  4  2  1  x  x   - x= not connected
+      1   1   1   1   0  1    0  1  1  1  1  1  0  0   - mask for HH cathode, only 2 bits for tens
+      1   1   1   0   1  1    1  1  1  1  1  1  0  0   - mask for MM cathode, 3 bits for tens
+      1   1   0   1   1  1    1  1  1  1  1  1  0  0   - mask for SS cathode, 3 bits for tens
+
+
+ANODES_MASK_GENERAL B11111100
+CATHODES_MASK_HOURS B11111100
+CATHODES_MASK_GENERAL B11111110
+
+HH 00111101
+MM 00111011
+SS 00110111
+*/
+
 ## Math
 
 Tens  Ones  Digit (integer) Comment
@@ -226,3 +248,4 @@ main.cpp
     getButtons()
     updateRTC()
     updateClock()
+
