@@ -6,7 +6,13 @@
 #include <Arduino.h>
 #include <string.h>
 
-word buildDisplayOut(byte displayMask, int displaySegment);
 String testlib();
+
+byte digitToBCD(int number);
+
+byte twoDigitsToBCD(int twodigits);
+
+/*word buildDisplayOut(byte displayMask, int displaySegment);
+String testlib();*/
 
 #endif
