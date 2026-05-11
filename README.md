@@ -217,6 +217,16 @@ Tens  Ones  Digit (integer) Comment
 [one tutorial](https://www.circuits-diy.com/button-long-short-press-arduino-tutorial/)
 [JC button library](https://github.com/JChristensen/JC_Button/tree/master)
 [best? tutorial](https://arduinogetstarted.com/tutorials/arduino-button-long-press-short-press)
+byte buttons --- function of buttons idea:
+  bit7 HH buttons 0=down button / 1 = up button
+  bit6 HH button 0=short / 1 = long
+  bit5 HH button state 0 / 1
+  bit4 - unused
+  bit3 - unused
+  bit2 MM buttons 0=down button / 1 = up button
+  bit1 MM button 0=short / 1 = long
+  bit0 MM HH button state 0 / 1
+  
 * refactor to make use of writing multiple digits at a time
 
 ## Create a library
