@@ -21,4 +21,9 @@ struct shiftAndCarry{
 
 shiftAndCarry adjustAnodesByte(byte anodes);
 
+void setupButtons();
+void buttonPressed(int button);
+void checkButton(int buttonNumber);
+void checkButtons();
+
 #endif

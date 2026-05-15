@@ -1,6 +1,8 @@
 # binaryClock
 
 ## BROKEN
+* There is something wonky about the library. VSCode & Platform.IO
+refuse to update the new library code, so the library is updated, but does nothing new, and this code is duplicated in main.cpp
 * there is something up about the highest bit in SS, it is always ON (maybe also for MM, and HH? Also, there is something not right about PORTD and PORTB, they seem to be mixed up)
 * there is a limit of 49.7 days ... So, it would be good to implement some kind of code that takes that into account or else the clock will become broken.
 

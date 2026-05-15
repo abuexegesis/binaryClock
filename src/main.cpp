@@ -5,7 +5,7 @@
 
 #define SECOND 1000
 #define DIGIT_SWEEP 10 // may use s/th diff?
-#define SWITCH_LOW 200
+#define LOW_TRIGGER 200
 
 #define NO_OF_SWITCHES 4
 
@@ -14,6 +14,7 @@
 #define CATHODES_SECONDS B00001100 // Seconds
 
 static const int cathode[] = {CATHODES_HOURS, CATHODES_MINUTES, CATHODES_SECONDS};
+static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
 
 // Setup myRTC and its associated variables
 softRTC myRTC;
@@ -24,8 +25,8 @@ bool pm = false, is12 = false;
 uint8_t time[] = {h,m,d};
 
 int digit_select = 0; // 0 => HH, 1 => MM, 2 => SS
-const unsigned long loop_time = 500;  // interval at which to poll
-const unsigned long digit_refresh_time = 10; // may need to use micros() to get 1500 , or 1.5 ms
+const unsigned long button_loop_time = 150;  // interval at which to poll
+const unsigned long segment_loop_time = 500; // may need to use micros() to get 1500 , or 1.5 ms
 /* 200Hz refresh rate -> 1000/200
 let's use 6 so it is 2 ms per digit 
 for complete display refresh. Some research recommends the sweet
@@ -34,6 +35,8 @@ unsigned long now; // where to put the current value of millis()
 unsigned long before; // previous time millis() was called
 unsigned long segment_time_now;
 unsigned long segment_time_before;
+bool newLoopTime = false;
+int count;
 
 shiftAndCarry anodesData;
 byte anodesCarry;
@@ -58,6 +61,32 @@ void testDigit(int digit, int value) {
   PORTD = anodesData.shifted;
 }
 
+/* I have no idea why these library functions don't work when I put
+them in my library "Utilites.cpp / .h" So that is why I put them here
+*/
+
+void setupButtons() {
+    for (int i=0; i<5; i++){
+    pinMode(buttons[i], INPUT_PULLUP);
+    }
+}
+
+void buttonPressed(int button){
+  String number = String(button+1);
+  String message = "Button " + number + " pressed!";
+  Serial.println(message);
+}
+
+void checkButton(int buttonNumber) {
+  if (analogRead(buttons[buttonNumber]) < LOW_TRIGGER) buttonPressed(buttonNumber); 
+}
+
+void checkButtons() {
+  for (int i=0; i<5; i++) {
+    checkButton(i);
+  }  
+}
+
 void setup() {
 // CONSOLE debug setup
   Serial.begin(9600);
@@ -67,11 +96,24 @@ void setup() {
     pinMode(dPin, OUTPUT);
   }
 
-// Set up Arduino nano analog pins for the pushbuttons
+  setupButtons();
+
+  Serial.println("Start up!");
+  before = millis();
+  now = millis();
+  segment_time_before = millis();
+  segment_time_now = millis();
+  
+
+/* Yank this out after including the analogButtons code in
+the Utilities.cpp / *.h
+
+Set up Arduino nano analog pins for the pushbuttons
   static const uint8_t button[] = {A0, A1, A2, A3}; // SW1A, SW2A, SW3A, SW4A
   for (int pin = 0; pin < NO_OF_SWITCHES; pin++) {
     pinMode(button[pin], INPUT_PULLUP);
   }
+*/
 
 /* this wonky temp_time is used because the compiler refuses
 to do this:
@@ -101,14 +143,29 @@ h=time_compiled.substring(0,2).toInt();
 
 void loop() {
 
-updateTime();
+  now = millis();
+  if ((now-before) >= button_loop_time) {
+//    Serial.println(". . . another loop passed by!");
+    before = now; // start a new loop time
+    checkButtons();
+  }
+  
+// update digits loop
 //d, m, y, h, min, s, pm, is12, weekday
+  updateTime();
+  segment_time_now = millis();
+  if ((segment_time_now-segment_time_before) >= segment_loop_time) {
+      segment_time_before = segment_time_now; // start a new loop time
+    testDigit(2,s);
+  }
 
+/* this will no longer work with the new millis bit
 // some testing here
-for (int count=0; count < 25; count ++){
-  testDigit(0, count);
-  delay(SECOND);
-}
+  for (int count=0; count < 25; count ++){
+    testDigit(0, count);
+    delay(SECOND);
+  }
+*/
 
 // updateDigit(0); // testing
 // digit_select = updateDigit(digit_select);

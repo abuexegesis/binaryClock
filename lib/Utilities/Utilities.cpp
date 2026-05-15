@@ -1,4 +1,8 @@
 #include <Utilities.h>
+
+#define LOW_TRIGGER 200
+static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
+
 word buildDisplayOut(byte displayMask, int displaySegment) {
     word displayOut;
     displayOut = CATHODES_MASK_GENERAL*256 + ANODES_MASK_GENERAL;
@@ -76,6 +80,29 @@ shiftAndCarry adjustAnodesByte(byte anodes){
     return result;
 }
 
+void setupButtons() {
+    for (int i=0; i<5; i++){
+    pinMode(buttons[i], INPUT_PULLUP);
+    }
+}
+
+void buttonPressed(int button){
+  String number = String(button+1);
+  String message = "Button " + number + " pressed!";
+  Serial.println(message);
+}
+
+void checkButton(int buttonNumber) {
+  if (analogRead(buttons[buttonNumber]) < LOW_TRIGGER) buttonPressed(buttonNumber); 
+}
+
+void checkButtons() {
+  for (int i=0; i<5; i++) {
+    checkButton(i);
+  }  
+}
+
+// None of the day month year even matters, see main.cpp!
 String timestamp = __TIMESTAMP__;
   // write(day, month, year, hour, minute, second, isPM, is12HMode)
   // Example: set 10:15:30 AM, 21 March 2025 in 24-hour mode
