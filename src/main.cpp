@@ -85,9 +85,10 @@ h=time_compiled.substring(0,2).toInt();
   temp_time=time_compiled.substring(6);
   s = temp_time.toInt();
   
-  Serial.println(h);
+  /*Serial.println(h);
   Serial.println(m);
   Serial.println(s);
+  */
 
   // Seed our binaryClock with a starting time corresponding to
   // when this code was built. Use default values of 1-Mar-2028
@@ -96,23 +97,6 @@ h=time_compiled.substring(0,2).toInt();
   /* Initialze the clock display based on above reading
      is there a flash memory that could be used on the Arduino nano once
      the clock has already been run? */
-}
-
-int pollSwitches() {
-/* Rough and ready way to check the pushbuttons 
-I need a better way, as this was used 2x  
-static const int analog_switch[] = {SW1A, SW2A, SW3A, SW4A}; */
-  int switchValue;
-  switchValue = 0;
-  
-  delay(SECOND);
-  
-  if (analogRead(A0) < SWITCH_LOW) switchValue = 1;
-  if (analogRead(A1) < SWITCH_LOW) switchValue = 2;
-  if (analogRead(A2) < SWITCH_LOW) switchValue = 3;
-  if (analogRead(A3) < SWITCH_LOW) switchValue = 4;
-
-  return switchValue;
 }
 
 void loop() {
