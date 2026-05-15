@@ -1,8 +1,8 @@
 # binaryClock
 
 ## BROKEN
-* something weird about the libraries right now. I have libdeps/nanoatmega328/Utilities, which is where my Utilities.cpp lives and there is a Utilites.h as well ... Hmmm. But in lib/Utilities/ there is a Utilites.c. Not what I want.
 * there is something up about the highest bit in SS, it is always ON (maybe also for MM, and HH? Also, there is something not right about PORTD and PORTB, they seem to be mixed up)
+* there is a limit of 49.7 days ... So, it would be good to implement some kind of code that takes that into account or else the clock will become broken.
 
 ## copyright
 
@@ -60,8 +60,9 @@ See the picture of the hardware in docs folder.
 
 ## Hardware improvement ideas
 
-* pull up resistors would make the input circuit less stable (unless there are already internal pull up resistors applied when these pins are programmed to be digital input pins)
-* Addendum, you can set up analog pins to have a pullup resistor, so that when the buttons are not pressed, they will be close to 5 volts, and when they are pressed, they will "bounce" a bit and stabilize to 0 volts.
+* Why are D0 and D1 pins unused, and the high bit for MM, SS
+is carried over to D8 (PORTD)? It basically means that there needs to be a carry operation from the anodes data (the data presented to the LEDs and the lowest bit of the cathodes port (PORTB) contains the highest bit of the MM, SS). This has been a confusing factor in getting this project working correctly, and requires extra processing that would not have been needed had this project just used D0-D6
+* You can set up analog pins to have a pullup resistor, so that when the buttons are not pressed, they will be close to 5 volts, and when they are pressed, they will "bounce" a bit and stabilize to 0 volts.
 * use an external RTC to get better accuracy for the clock
 
 ## A note about git config
@@ -264,4 +265,3 @@ main.cpp
     getButtons()
     updateRTC()
     updateClock()
-
