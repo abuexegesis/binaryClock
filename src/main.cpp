@@ -15,9 +15,9 @@
 
 static const int cathode[] = {CATHODES_HOURS, CATHODES_MINUTES, CATHODES_SECONDS};
 
-// declare myRTC for this project
+// Setup myRTC and its associated variables
 softRTC myRTC;
-// RTC variables
+
 uint8_t d, m, h, min, s, weekday;
 uint16_t y;
 bool pm = false, is12 = false;
@@ -36,7 +36,11 @@ unsigned long segment_time_now;
 unsigned long segment_time_before;
 
 shiftAndCarry anodesData;
-byte anodesCarry;   
+byte anodesCarry;
+
+/* Use the following strings from compile time to set
+a reasonable starting point for the binaryClock */
+String time_compiled = __TIME__;
 
 void updateTime(){
   myRTC.read(d, m, y, h, min, s, pm, is12, weekday);
@@ -55,25 +59,43 @@ void testDigit(int digit, int value) {
 }
 
 void setup() {
-  // CONSOLE debug setup and test
+// CONSOLE debug setup
   Serial.begin(9600);
 
+// Setup Arduino nano digial pins (could do with a PORTB, PORTD command)
   for(int dPin = 0; dPin < 14; dPin++) {
     pinMode(dPin, OUTPUT);
   }
 
-  // static const uint8_t analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
+// Set up Arduino nano analog pins for the pushbuttons
   static const uint8_t button[] = {A0, A1, A2, A3}; // SW1A, SW2A, SW3A, SW4A
   for (int pin = 0; pin < NO_OF_SWITCHES; pin++) {
     pinMode(button[pin], INPUT_PULLUP);
   }
+
+/* this wonky temp_time is used because the compiler refuses
+to do this:
+h=time_compiled.substring(0,2).toInt();
+*/
+  String temp_time=time_compiled.substring(0,2);
+  h = temp_time.toInt();
+  temp_time=time_compiled.substring(3,5);
+  m = temp_time.toInt();
+  // using ...substring(6) because it works, (6,7) only give one digit, (6,8) gives 2
+  temp_time=time_compiled.substring(6);
+  s = temp_time.toInt();
   
-  myRTC.write(8, 5, 2026, 12, 54, 45, false, MODE_24H);
+  Serial.println(h);
+  Serial.println(m);
+  Serial.println(s);
+
+  // Seed our binaryClock with a starting time corresponding to
+  // when this code was built. Use default values of 1-Mar-2028
+  myRTC.write(1, 4, 2028, h, m, s, false, MODE_24H);
 
   /* Initialze the clock display based on above reading
      is there a flash memory that could be used on the Arduino nano once
      the clock has already been run? */
-
 }
 
 int pollSwitches() {
@@ -98,6 +120,7 @@ void loop() {
 updateTime();
 //d, m, y, h, min, s, pm, is12, weekday
 
+// some testing here
 for (int count=0; count < 25; count ++){
   testDigit(0, count);
   delay(SECOND);
