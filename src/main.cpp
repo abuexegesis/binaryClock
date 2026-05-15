@@ -4,30 +4,54 @@
 #include <Utilities.h>
 
 #define SECOND 1000
-#define DIGIT_SWEEP 10
+#define DIGIT_SWEEP 10 // may use s/th diff?
 #define SWITCH_LOW 200
-#define SW1A A0
-#define SW2A A1
-#define SW3A A2
-#define SW4A A3
+
 #define NO_OF_SWITCHES 4
-// does not seem to work > #define SWITCH(A0, A1, A2, A3)
-#define CATHODES_HOURS B00111100
-#define CATHODES_MINUTES B00111010
-#define CATHODES_SECONDS B00110110
+
+#define CATHODES_HOURS B00000110 // Hours
+#define CATHODES_MINUTES B00001010 // Minutes
+#define CATHODES_SECONDS B00001100 // Seconds
+
+static const int cathode[] = {CATHODES_HOURS, CATHODES_MINUTES, CATHODES_SECONDS};
 
 // declare myRTC for this project
 softRTC myRTC;
 // RTC variables
 uint8_t d, m, h, min, s, weekday;
 uint16_t y;
-bool pm, is12;
+bool pm = false, is12 = false;
+uint8_t time[] = {h,m,d};
+
+int digit_select = 0; // 0 => HH, 1 => MM, 2 => SS
+const unsigned long loop_time = 500;  // interval at which to poll
+const unsigned long digit_refresh_time = 10; // may need to use micros() to get 1500 , or 1.5 ms
+/* 200Hz refresh rate -> 1000/200
+let's use 6 so it is 2 ms per digit 
+for complete display refresh. Some research recommends the sweet
+spot of 100 to 250 Hz refresh per digit */
+unsigned long now; // where to put the current value of millis()
+unsigned long before; // previous time millis() was called
+unsigned long segment_time_now;
+unsigned long segment_time_before;
 
 shiftAndCarry anodesData;
 byte anodesCarry;   
 
 void updateTime(){
   myRTC.read(d, m, y, h, min, s, pm, is12, weekday);
+  time[0]=h;
+  time[1]=m;
+  time[2]=s;
+}
+
+void testDigit(int digit, int value) {
+  anodesData = adjustAnodesByte (twoDigitsToBCD(value));
+//void testDigit(int digit){ // 0-> HH, 1-> MM, 2-> SS
+//  anodesData = adjustAnodesByte (twoDigitsToBCD(time[digit]));
+  anodesCarry = anodesData.carry;
+  PORTB = cathode[digit]; 
+  PORTD = anodesData.shifted;
 }
 
 void setup() {
@@ -38,9 +62,10 @@ void setup() {
     pinMode(dPin, OUTPUT);
   }
 
-  static const uint8_t analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
+  // static const uint8_t analog_switch[] = {SW1A, SW2A, SW3A, SW4A};
+  static const uint8_t button[] = {A0, A1, A2, A3}; // SW1A, SW2A, SW3A, SW4A
   for (int pin = 0; pin < NO_OF_SWITCHES; pin++) {
-    pinMode(analog_switch[pin], INPUT_PULLUP);
+    pinMode(button[pin], INPUT_PULLUP);
   }
   
   myRTC.write(8, 5, 2026, 12, 54, 45, false, MODE_24H);
@@ -70,27 +95,15 @@ static const int analog_switch[] = {SW1A, SW2A, SW3A, SW4A}; */
 
 void loop() {
 
-  updateTime();
+updateTime();
 //d, m, y, h, min, s, pm, is12, weekday
 
-// Refactor this as a loop
-  
-  anodesData = adjustAnodesByte (twoDigitsToBCD(s));
-  anodesCarry = anodesData.carry;
-  PORTB = CATHODES_HOURS || anodesCarry;
-  PORTD = anodesData.shifted;
-  delay(DIGIT_SWEEP);
-  
-  anodesData = adjustAnodesByte (twoDigitsToBCD(m));
-  anodesCarry = anodesData.carry;
-  PORTB = CATHODES_MINUTES  || anodesCarry;
-  PORTD = anodesData.shifted;
-  delay(DIGIT_SWEEP);
-  
-  anodesData = adjustAnodesByte (twoDigitsToBCD(h));
-  anodesCarry = anodesData.carry;
-  PORTB = CATHODES_SECONDS ;
-  PORTD = anodesData.shifted || anodesCarry;
-  delay(DIGIT_SWEEP);
+for (int count=0; count < 25; count ++){
+  testDigit(0, count);
+  delay(SECOND);
+}
+
+// updateDigit(0); // testing
+// digit_select = updateDigit(digit_select);
 
 }
