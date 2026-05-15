@@ -26,7 +26,7 @@ uint8_t time[] = {h,m,d};
 
 int digit_select = 0; // 0 => HH, 1 => MM, 2 => SS
 const unsigned long button_loop_time = 150;  // interval at which to poll
-const unsigned long segment_loop_time = 500; // may need to use micros() to get 1500 , or 1.5 ms
+const unsigned long segment_loop_time = 10; // may need to use micros() to get 1500 , or 1.5 ms
 /* 200Hz refresh rate -> 1000/200
 let's use 6 so it is 2 ms per digit 
 for complete display refresh. Some research recommends the sweet
@@ -162,11 +162,10 @@ void loop() {
   updateTime();
   segment_time_now = millis();
   if ((segment_time_now-segment_time_before) >= segment_loop_time) {
-      segment_time_before = segment_time_now; // start a new loop time
-    // this works => testDigit(2,s);
-    // now make the carry digit work correctly
-    // testDigit(2,s);
-    testDigit(2,s);
+    segment_time_before = segment_time_now; // start a new loop time
+    testDigit(digit_select,time[digit_select]);
+    digit_select++;
+    if (digit_select > 2) digit_select=0;
   }
 
 /* this will no longer work with the new millis bit
