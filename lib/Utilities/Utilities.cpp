@@ -1,7 +1,7 @@
 #include <Utilities.h>
 
-#define LOW_TRIGGER 200
-static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
+// bring back later? #define LOW_TRIGGER 200
+// bring back later .. static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
 
 word buildDisplayOut(byte displayMask, int displaySegment) {
     word displayOut;
@@ -68,18 +68,26 @@ byte twoDigitsToBCD(int twodigits){
 }
 
 shiftAndCarry adjustAnodesByte(byte anodes){
-    shiftAndCarry result;
-    result.shifted = (byte)(anodes << 2);
-    result.carry = B10000000 && anodes;
-    if (result.carry == B10000000) {
-        result.carry = B00000001;
-    }
-    else {
-        result.carry = B00000000; 
-    }
-    return result;
+  shiftAndCarry result;
+  result.shifted = (byte)(anodes << 2);
+  // Serial.println("From shift and carry function");
+/* Note the carry is not the most significant bit, that would be
+if you are only shifting left one time. We are shifting left 2x! */
+  //Serial.println(anodes);  
+  result.carry = B01000000 & anodes; // not &&, that is two booleans
+  //Serial.println(result.carry);
+  if (result.carry == B01000000) {
+       result.carry = B00000001;
+  }
+  else {
+    result.carry = B00000000; 
+  }
+  return result;
 }
 
+/* maybe the recompile after getting rid of some .pio files to
+force a recompile of the library now I get linking errors it looks
+like. Except the errors are NOT obvious at all
 void setupButtons() {
     for (int i=0; i<5; i++){
     pinMode(buttons[i], INPUT_PULLUP);
@@ -101,6 +109,7 @@ void checkButtons() {
     checkButton(i);
   }  
 }
+*/
 
 // None of the day month year even matters, see main.cpp!
 String timestamp = __TIMESTAMP__;

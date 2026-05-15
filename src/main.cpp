@@ -53,11 +53,18 @@ void updateTime(){
 }
 
 void testDigit(int digit, int value) {
-  anodesData = adjustAnodesByte (twoDigitsToBCD(value));
-//void testDigit(int digit){ // 0-> HH, 1-> MM, 2-> SS
-//  anodesData = adjustAnodesByte (twoDigitsToBCD(time[digit]));
+  anodesData = adjustAnodesByte(twoDigitsToBCD(value));
   anodesCarry = anodesData.carry;
-  PORTB = cathode[digit]; 
+/* needed to add the anodes carry bit or else that bit would never
+be displayed */
+/* Serial.println(value);
+  Serial.println(anodesData.shifted);
+  Serial.println(anodesCarry);
+  Serial.println(cathode[digit]);
+  Serial.println(cathode[digit]+anodesCarry);
+  Serial.println("***************");
+  */
+  PORTB = cathode[digit]+anodesCarry;
   PORTD = anodesData.shifted;
 }
 
@@ -156,6 +163,9 @@ void loop() {
   segment_time_now = millis();
   if ((segment_time_now-segment_time_before) >= segment_loop_time) {
       segment_time_before = segment_time_now; // start a new loop time
+    // this works => testDigit(2,s);
+    // now make the carry digit work correctly
+    // testDigit(2,s);
     testDigit(2,s);
   }
 
