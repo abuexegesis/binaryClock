@@ -5,7 +5,7 @@
 
 #define SECOND 1000
 #define DIGIT_SWEEP 10 // may use s/th diff?
-#define LOW_TRIGGER 200
+//#define LOW_TRIGGER 200
 
 #define NO_OF_SWITCHES 4
 
@@ -57,13 +57,6 @@ void testDigit(int digit, int value) {
   anodesCarry = anodesData.carry;
 /* needed to add the anodes carry bit or else that bit would never
 be displayed */
-/* Serial.println(value);
-  Serial.println(anodesData.shifted);
-  Serial.println(anodesCarry);
-  Serial.println(cathode[digit]);
-  Serial.println(cathode[digit]+anodesCarry);
-  Serial.println("***************");
-  */
   PORTB = cathode[digit]+anodesCarry;
   PORTD = anodesData.shifted;
 }
@@ -72,6 +65,7 @@ be displayed */
 them in my library "Utilites.cpp / .h" So that is why I put them here
 */
 
+/*
 void setupButtons() {
     for (int i=0; i<5; i++){
     pinMode(buttons[i], INPUT_PULLUP);
@@ -93,6 +87,7 @@ void checkButtons() {
     checkButton(i);
   }  
 }
+*/
 
 void setup() {
 // CONSOLE debug setup

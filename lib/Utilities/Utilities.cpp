@@ -1,7 +1,7 @@
 #include <Utilities.h>
 
-// bring back later? #define LOW_TRIGGER 200
-// bring back later .. static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
+#define LOW_TRIGGER 200
+static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
 
 word buildDisplayOut(byte displayMask, int displaySegment) {
     word displayOut;
@@ -87,7 +87,7 @@ if you are only shifting left one time. We are shifting left 2x! */
 
 /* maybe the recompile after getting rid of some .pio files to
 force a recompile of the library now I get linking errors it looks
-like. Except the errors are NOT obvious at all
+like. Except the errors are NOT obvious at all */
 void setupButtons() {
     for (int i=0; i<5; i++){
     pinMode(buttons[i], INPUT_PULLUP);
@@ -109,7 +109,6 @@ void checkButtons() {
     checkButton(i);
   }  
 }
-*/
 
 // None of the day month year even matters, see main.cpp!
 String timestamp = __TIMESTAMP__;
