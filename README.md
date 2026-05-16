@@ -1,9 +1,7 @@
 # binaryClock
 
 ## BROKEN
-* There is something wonky about the library. VSCode & Platform.IO
-refuse to update the new library code, so the library is updated, but does nothing new, and this code is duplicated in main.cpp
-* there is something up about the highest bit in SS, it is always ON (maybe also for MM, and HH? Also, there is something not right about PORTD and PORTB, they seem to be mixed up)
+* not sure the display is quite right for HH, MM, but they are "mostly" independent. The HH seems to move a bit quicker than the MM. Probably it would be good to run counters through them so I could watch themm progress properly. But stagger them so that it could show independence. (For testing try setting up counters to do: HH 0-23, MM 0-29, SS 30-59)
 * there is a limit of 49.7 days ... So, it would be good to implement some kind of code that takes that into account or else the clock will become broken.
 
 ## copyright
@@ -212,13 +210,13 @@ Tens  Ones  Digit (integer) Comment
 000   1001  09
 
 ## Roadmap
-* make SS display
+* done: make SS display
 * clean up code
-* ways to better use the loop without using "delay"? Maybe the timing will be more accurate then? [Better Timing loops - multiple non blocking using millis()](https://pcbsync.com/arduino-timers/)
+* done: ways to better use the loop without using "delay"? Maybe the timing will be more accurate then? [Better Timing loops - multiple non blocking using millis()](https://pcbsync.com/arduino-timers/)
 * make MM and HH display correctly
 * sweep HH MM SS to make them all display correctly and update
 * look into a buttons library for debounce, press, long_press
-* make all buttons function
+* done: make all buttons function
 [one tutorial](https://www.circuits-diy.com/button-long-short-press-arduino-tutorial/)
 [JC button library](https://github.com/JChristensen/JC_Button/tree/master)
 [best? tutorial](https://arduinogetstarted.com/tutorials/arduino-button-long-press-short-press)
@@ -238,7 +236,8 @@ byte buttons --- function of buttons idea:
 * [library tutoria](https://roboticsbackend.com/arduino-create-library/)
 * get some of the clutter out of main.cpp, or make some functions that I could use which
 would clutter up main.cpp
-
+*There is something wonky about the library. VSCode & Platform.IO
+refuse to update the new library code, so the library is updated, but does nothing new, and this code is duplicated in main.cpp. It turns out that there is some cacheing going on, and once I deleted *.o objects I forced it to rebuild libraries. That seemed to be the key.
 ## Some useful types and structures
 * Bytes for writing to PORTD (the cathodes) [HH, MM, SS]
 
@@ -267,3 +266,7 @@ main.cpp
     getButtons()
     updateRTC()
     updateClock()
+
+## Other things fixed:
+* there is something up about the highest bit in SS, it is always ON (maybe also for MM, and HH? It turns out there is a difference between doing the operation someByte && someByte or someByte & someByte. The first just turns up a logical bit, whereas the second actually does the & operation on the two bytes. I was doing the former and only getting a boolean result where I needed to have a BYTE result. 
+* Also, there is something not right about PORTD and PORTB, they seem to be mixed up). Both solved. I had just got a bit confused about which bit was which. It is all sorted now.
