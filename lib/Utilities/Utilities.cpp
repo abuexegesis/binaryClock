@@ -1,4 +1,5 @@
 #include <Utilities.h>
+#include <main.cpp>
 
 #define LOW_TRIGGER 200
 static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
@@ -94,11 +95,31 @@ void setupButtons() {
     }
 }
 
+/* MOVE TO MAIN.CPP
 void buttonPressed(int button){
+  int delta = 1; // change of value
+  bool hh = true; // true -> change hours | false -> change minutes 
   String number = String(button+1);
   String message = "Button " + number + " pressed!";
+  switch (button) {
+  case 0:
+    break;
+  case 1:
+    delta = -1;
+    break;
+  case 2:
+    hh = false;
+    break;
+  case 3:
+    hh = false;
+    delta = -1;
+    break;
+  }  
   Serial.println(message);
+  Serial.println("Now calling adjustTime function");
+  adjustTime(hh, delta);
 }
+*/
 
 void checkButton(int buttonNumber) {
   if (analogRead(buttons[buttonNumber]) < LOW_TRIGGER) buttonPressed(buttonNumber); 

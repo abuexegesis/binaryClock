@@ -52,6 +52,52 @@ void updateTime(){
   time[2]=s;
 }
 
+
+void adjustTime(bool hh, int increase){
+  String temp = time_compiled.substring(0,2);
+  h = temp.toInt();
+  temp = time_compiled.substring(3,5);
+  m = temp.toInt();
+  updateTime();
+  if (hh == true){
+    h = h + increase;
+  } else {
+    min = min + increase;
+  }
+  myRTC.write(1, 4, 2028, h, min, s, false, MODE_24H);
+  Serial.println("Inside adjustTime function!");
+}
+
+void buttonPressed(int button){
+  int delta = 1; // change of value
+  bool hh = true; // true -> change hours | false -> change minutes 
+  String number = String(button+1);
+  String message = "Button " + number + " pressed!";
+  switch (button) {
+  case 0:
+    break;
+  case 1:
+    delta = -1;
+    break;
+  case 2:
+    hh = false;
+    break;
+  case 3:
+    hh = false;
+    delta = -1;
+    break;
+  }  
+  Serial.println(message);
+  Serial.println("Now calling adjustTime function");
+  adjustTime(hh, delta);
+}
+
+void updateTest(int hh, int mm, int ss){
+  time[0]=hh;
+  time[1]=mm;
+  time[2]=ss;
+}
+
 void testDigit(int digit, int value) {
   anodesData = adjustAnodesByte(twoDigitsToBCD(value));
   anodesCarry = anodesData.carry;
@@ -97,6 +143,8 @@ h=time_compiled.substring(0,2).toInt();
   /* Initialze the clock display based on above reading
      is there a flash memory that could be used on the Arduino nano once
      the clock has already been run? */
+
+  updateTest(9, 22, 44);
 }
 
 void loop() {
@@ -110,7 +158,8 @@ void loop() {
   
 // update digits loop
 //d, m, y, h, min, s, pm, is12, weekday
-  updateTime();
+  // just to test out buttons updateTime();
+  
   segment_time_now = millis();
   if ((segment_time_now-segment_time_before) >= segment_loop_time) {
     segment_time_before = segment_time_now; // start a new loop time
@@ -118,5 +167,5 @@ void loop() {
     digit_select++;
     if (digit_select > 2) digit_select=0;
   }
-  
+
 }
