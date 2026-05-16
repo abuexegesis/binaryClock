@@ -1,7 +1,77 @@
+#include <Arduino.h>
 #include <Utilities.h>
+#include <softRTC.h>
 
 #define LOW_TRIGGER 200
 static const uint8_t buttons[] = {A0,A1,A2,A3,A4};
+
+// Setup myRTC and its associated variables
+
+uint8_t d, m, h, min, s, weekday;
+uint16_t y;
+bool pm = false, is12 = false;
+uint8_t time[] = {h,min,s};
+softRTC myRTC;
+
+void syncToBuildTime(){
+/* Use the following strings from compile time to set
+a reasonable starting point for the binaryClock */
+  String time_compiled = __TIME__;
+
+/* TEMPORARY => This wonky temp_time is used because of type mismatches that
+the compiler whines about, so do this:
+h=time_compiled.substring(0,2).toInt();*/
+
+  String temp_time=time_compiled.substring(0,2);
+  h = temp_time.toInt();
+  temp_time=time_compiled.substring(3,5);
+  m = temp_time.toInt();
+// using ...substring(6) because it works, (6,7) only give one digit, (6,8) gives 2
+  temp_time=time_compiled.substring(6);
+  s = temp_time.toInt();
+
+// Seed our binaryClock with a starting time corresponding to
+// when this code was built. Use default values of 1-Mar-2028
+  myRTC.write(1, 4, 2028, h, m, s, false, MODE_24H);
+
+/* Initialze the clock display based on above reading
+   is there a flash memory that could be used on the Arduino nano once
+   the clock has already been run? 
+*/
+}
+
+currentTime updateTime(){
+  myRTC.read(d, m, y, h, min, s, pm, is12, weekday);
+  currentTime time;
+  /*time[0]=h;
+  time[1]=min;
+  time[2]=s;*/
+  time.h = h;
+  time.min = min;
+  time.s = s;
+  return time;
+}
+
+/* hh_mm = false -> change MM; true -> change HH settings
+delta is how much to change it by (+/- delta)
+
+TEST: simply display two different numbers for HH MM and
+test the four buttons out, then return the code to displaying
+the clock on the LEDs
+*/
+
+void adjustTime(bool hh_mm, int delta){
+
+  updateTime();
+
+  if (hh_mm = false){
+    m = m+delta;
+  } else {
+    h = h+delta;
+  }
+
+  myRTC.write(1, 4, 2028, h, m, s, false, MODE_24H);
+}
 
 word buildDisplayOut(byte displayMask, int displaySegment) {
     word displayOut;
@@ -109,6 +179,10 @@ void checkButtons() {
     checkButton(i);
   }  
 }
+
+/*===============================================================
+
+*/
 
 // None of the day month year even matters, see main.cpp!
 String timestamp = __TIMESTAMP__;
