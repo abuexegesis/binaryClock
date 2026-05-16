@@ -1,6 +1,7 @@
 # binaryClock
 
 ## BROKEN
+* The buttons change the time, but I think there are also basic display problems that make it difficult to tell how well this is working.
 * not sure the display is quite right for HH, MM, but they are "mostly" independent. The HH seems to move a bit quicker than the MM. Probably it would be good to run counters through them so I could watch themm progress properly. But stagger them so that it could show independence. (For testing try setting up counters to do: HH 0-23, MM 0-29, SS 30-59)
 * there is a limit of 49.7 days ... So, it would be good to implement some kind of code that takes that into account or else the clock will become broken.
 
